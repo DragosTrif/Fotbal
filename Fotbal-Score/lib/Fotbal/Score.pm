@@ -5,6 +5,7 @@ use Dancer2::Plugin::Database;
 use List::Util qw(reduce);
 
 use Fotbal::Utils::Sqlib qw (make_stats_sql);
+use Fotbal::Utils::MakeStats;
 
 our $VERSION = '0.1';
 
@@ -109,38 +110,17 @@ get '/see_stats' => sub {
   while ( my $row = $sth_visitors->fetchrow_hashref ) {
     push @$visitors, $row;
   }
-  
+my $game_result_host = Fotbal::Utils::MakeStats->new(data => $hosts,
+team_type => 'hosts' );
+my $game_result_visitors = Fotbal::Utils::MakeStats->new(data => $visitors,
+team_type => 'visitors' );
+
+$hosts = $game_result_host->get_victory();
+$visitors = $game_result_visitors->get_victory();
 my $results = [];
-
-  foreach my $data (@$hosts) {
-    my $host_results = {};
-    $host_results->{name} = $data->{name};
-    $host_results->{goals_marked} = $data->{goals_team_1};
-    $host_results->{goals_got} = $data->{goals_team_2};
-    $host_results->{victory}++
-      if $data->{goals_team_1} > $data->{goals_team_2};
-    $host_results->{defeats}++
-      if $data->{goals_team_2} > $data->{goals_team_1};
-      push @$results, $host_results;
-  }
-
-  foreach my $data (@$visitors) {
-    my $visitor_results = {};
-
-    $visitor_results->{name} = $data->{name};
-    $visitor_results->{goals_marked} = $data->{goals_team_2};
-    $visitor_results->{goals_got} = $data->{goals_team_1};
-    $visitor_results->{victory}++
-      if $data->{goals_team_2} > $data->{goals_team_1};
-    $visitor_results->{defeats}++
-      if $data->{goals_team_1} > $data->{goals_team_2};
-      push @$results, $visitor_results;
-  }
+@$results = (@$hosts, @$visitors);
+  
   my $final_results = {};
-  my @vic;
-  my @defeats;
-  my @goals_marked;
-  my @goals_got;
 
   foreach my $result (@$results) {
     my $team_name = $result->{name};
@@ -172,7 +152,7 @@ my $results = [];
 
    }
   my @ready_to_print;
-  debug($final_results);
+  #debug($final_results);
   foreach my $key (keys %$final_results) {
     my $row = {};
   
@@ -196,7 +176,8 @@ my $results = [];
 
     my @extreme =  sort { $b->{total_marked} <=> $a->{total_marked} } @ready_to_print;
     my $bigets_marker = $extreme[0];
-    @extreme =  sort { $b->{total_recived} <=> $a->{total_recived} } @ready_to_print;
+    @extreme =  sort { $b->{recived} <=> $a->{recived} } @ready_to_print;
+    debug(@extreme);
     my $bigets_reciver = $extreme[0];
     @extreme = ($bigets_marker, $bigets_reciver);
    template 'show_stats', {
