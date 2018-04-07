@@ -4,6 +4,8 @@ use Dancer2;
 use Dancer2::Plugin::Database;
 use List::Util qw(reduce);
 
+use Fotbal::Utils::Sqlib qw (make_stats_sql);
+
 our $VERSION = '0.1';
 
 my $flash;
@@ -20,21 +22,6 @@ sub get_flash {
   $flash = "";
 
   return $msg;
-}
-
-sub make_stats_sql {
-  my $host = shift;
-  my $sql_part = "on t.id = g.team_id_2";
-  $sql_part = "on t.id = g.team_id_1"
-    if $host;
- 
-  my $sql = "SELECT * FROM teams t
-    join games g
-    $sql_part
-    join score s 
-    ON s.id = g.id;";
-
-  return $sql;
 }
 
 get '/' => sub {
@@ -54,11 +41,11 @@ get '/add_teams' => sub {
 
 post '/add_teams' => sub {
   my $team_1 = params->{team_1};
-  
+  #my $team_2 = params->{team_2};
   database->quick_insert( 'teams', { name => $team_1 } );
-
+  #database->quick_insert( 'teams', { name => $team_2 } );
   set_flash(
-    "$team_1 and $team_2 -> added. 
+    "$team_1 -> added. 
       Go play\n"
   );
 
@@ -209,8 +196,7 @@ my $results = [];
 
     my @extreme =  sort { $b->{total_marked} <=> $a->{total_marked} } @ready_to_print;
     my $bigets_marker = $extreme[0];
-    
-    @extreme =  sort { $b->{recived} <=> $a->{recived} } @ready_to_print;
+    @extreme =  sort { $b->{total_recived} <=> $a->{total_recived} } @ready_to_print;
     my $bigets_reciver = $extreme[0];
     @extreme = ($bigets_marker, $bigets_reciver);
    template 'show_stats', {
