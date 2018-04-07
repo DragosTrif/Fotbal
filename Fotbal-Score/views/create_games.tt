@@ -1,12 +1,4 @@
 
-<p>Please select two teams to create a game </p>
-<% FOREACH team = team_names %>
-  <% team.name %> </br>
-
-<% END %>  
-
-
-
 <div class="row">
    <div class="col-md-12">
       <div class="awidget login-reg">
@@ -20,6 +12,11 @@
                <hr />
             </div>
             <!-- Page title -->
+            <p>Please select two teams to create a game </p>
+          <% FOREACH team = team_names %>
+            <% team.name %> </br>
+
+          <% END %>  
             
             <br />
             <form class="form-horizontal" role="form" action="paly" method="post">

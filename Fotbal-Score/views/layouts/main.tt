@@ -1,22 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="<% settings.charset %>">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <!-- <meta charset="<% settings.charset %>"> -->
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"> -->
   <title>Fotbal::Score</title>
-  <link rel="stylesheet" href="<% request.uri_base %>/css/style.css">
+  <link rel="stylesheet" href="<% request.uri_base %>/css/bootstrap.css"> 
 
 <!-- Grab jQuery from a CDN, fall back to local if necessary -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-<script type="text/javascript">/* <![CDATA[ */
+<!-- <script src="//code.jquery.com/jquery-2.1.4.min.js"></script> -->
+<!-- <script type="text/javascript">/* <![CDATA[ */
     !window.jQuery && document.write('<script type="text/javascript" src="<% request.uri_base %>/javascripts/jquery.js"><\/script>')
-/* ]]> */</script>
+/* ]]> */</script> -->
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Bare - Start Bootstrap Template</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="<% request.uri_base %> css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+      body {
+        padding-top: 54px;
+      }
+      @media (min-width: 992px) {
+        body {
+          padding-top: 56px;
+        }
+      }
+
+    </style>
 
 </head>
 <body>
-<% content %>
-<div id="footer">
-Powered by <a href="http://perldancer.org/">Dancer2</a> <% dancer_version %>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Start Bootstrap</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/add_teams">Add a team</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/play">Play</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/see_stats">Stats</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h1 class="mt-5">A Bootstrap 4 Starter Template</h1>
+          <p class="lead">Complete with pre-defined file paths and responsive navigation!</p>
+          <ul class="list-unstyled">
+            <li>Bootstrap 4.0.0</li>
+            <li>jQuery 3.3.0</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="<% request.uri_base %> javascripts/jquery.min.js"></script>
+    <script src="<% request.uri_base %> javascripts/bootstrap.bundle.min.js"></script>
+<!-- <% content %> -->
+<!-- <div id="footer"> -->
+<!-- Powered by <a href="http://perldancer.org/">Dancer2</a> <% dancer_version %> -->
 </div>
 </body>
 </html>

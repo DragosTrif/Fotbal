@@ -54,9 +54,9 @@ get '/add_teams' => sub {
 
 post '/add_teams' => sub {
   my $team_1 = params->{team_1};
-  my $team_2 = params->{team_2};
+  
   database->quick_insert( 'teams', { name => $team_1 } );
-  database->quick_insert( 'teams', { name => $team_2 } );
+
   set_flash(
     "$team_1 and $team_2 -> added. 
       Go play\n"

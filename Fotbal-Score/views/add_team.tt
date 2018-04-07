@@ -21,19 +21,12 @@
                 </div>
                 
               </br>
-                <div class="page-title text-center">
-                <h2>VS</h2>
-                <hr />
-                </div>
-                <label for="add_teams" class="col-lg-2 control-label">team 2</label>
-                <div class="col-lg-10">
-                  <input type="text" required name="team_2" class="form-control" id="team_2" placeholder="team_2">
-                </div>
+                
               </div>
               <hr />
               <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-10">
-                  <button type="submit" class="btn btn-info">Play</button>
+                  <button type="submit" class="btn btn-info">Add</button>
                   <button type="reset" class="btn btn-default">Reset</button>
                 </div>
               </div>
