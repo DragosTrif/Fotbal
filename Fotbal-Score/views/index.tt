@@ -1,0 +1,23 @@
+<!-- <a href="add_teams">add a team</a>
+<a href="see_stats">see stats</a> -->
+
+<!doctype html>
+<html>
+<head>
+  <title>Games and Stats</title>
+  <link rel=stylesheet type=text/css href="<% css_url %>">
+</head>
+<body>,
+  <div class=page>
+  <h1>Games and Stats</h1>
+     <div class=metanav>
+       <a href="<% add_entry_url %>">add a team</a>
+       <a href="<% stats_url %>">stats</a>
+       <a href="<% game_url %>">game on</a>
+  </div>
+  <% IF msg %>
+    <div class=flash> <% msg %> </div>
+  <% END %>
+</div>
+</body>
+</html>

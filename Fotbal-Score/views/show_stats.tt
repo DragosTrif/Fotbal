@@ -1,0 +1,45 @@
+<!-- <div style="width: 70%;"> -->
+<!-- <div style="float: left; width: 20%;">tabel 1</div> -->
+<table border=\"1\" cellpadding=\"4\">
+  <!-- <h2>Stats</h2> -->
+<tr>
+  <th>Team Name</th>
+  <th>Goals Marked</th>
+  <th>Goals Recived</th>
+  <th>Victorys</th>
+  <th>Defeats</th>
+</tr>
+
+
+<% FOREACH team = team %>
+  <tr><td><% team.name %> </td> 
+  <td><% team.total_marked %></td> 
+  <td><%team.recived%></td>  
+  <td><%team.total_victory%></td> 
+  <td><%team.total_defeats%></td></tr>
+
+<% END %>
+
+
+<!-- <div> -->
+<!-- <h3>Best and worse by goals marked/recived</h3> -->
+ <!-- <div style="float: center; width: 20%;">tabel 1 -->
+<table border=\"1\" cellpadding=\"4\">
+<tr>
+  <th>Team Name</th>
+  <th>Goals Marked</th>
+  <th>Goals Recived</th>
+  <th>Victorys</th>
+  <th>Defeats</th>
+</tr>
+  <% FOREACH team = extream %>
+  <tr><td><% team.name %> </td> 
+  <td><% team.total_marked %></td> 
+  <td><%team.recived%></td>  
+  <td><%team.total_victory%></td> 
+  <td><%team.total_defeats%></td></tr>
+
+<% END %>
+<!-- </div> -->
+<!-- </div> -->
+<!-- </div> -->
