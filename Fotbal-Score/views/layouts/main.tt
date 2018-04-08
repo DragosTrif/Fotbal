@@ -82,9 +82,9 @@
     <!-- Bootstrap core JavaScript -->
     <script src="<% request.uri_base %> javascripts/jquery.min.js"></script>
     <script src="<% request.uri_base %> javascripts/bootstrap.bundle.min.js"></script>
-<!-- <% content %> -->
-<!-- <div id="footer"> -->
-<!-- Powered by <a href="http://perldancer.org/">Dancer2</a> <% dancer_version %> -->
+<!-- <% content %>
+<!-- <div id="footer">
+<!-- Powered by <a href="http://perldancer.org/">Dancer2</a> <% dancer_version %> 
 </div>
 </body>
 </html>
