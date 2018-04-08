@@ -2,7 +2,6 @@ package Fotbal::Score;
 use Dancer2;
 
 use Dancer2::Plugin::Database;
-use List::Util qw(reduce);
 
 use Fotbal::Utils::Sqlib qw (make_stats_sql);
 use Fotbal::Utils::MakeStats;
@@ -42,8 +41,10 @@ get '/add_teams' => sub {
 
 post '/add_teams' => sub {
   my $team_1 = params->{team_1};
+
   #my $team_2 = params->{team_2};
   database->quick_insert( 'teams', { name => $team_1 } );
+
   #database->quick_insert( 'teams', { name => $team_2 } );
   set_flash(
     "$team_1 -> added. 
@@ -95,10 +96,10 @@ post '/paly' => sub {
 };
 
 get '/see_stats' => sub {
-  my $sth_hosts = database->prepare( &make_stats_sql(1) );
+  my $sth_hosts    = database->prepare( &make_stats_sql(1) );
   my $sth_visitors = database->prepare( &make_stats_sql() );
-  my $hosts     = [];
-  my $visitors = [];
+  my $hosts        = [];
+  my $visitors     = [];
 
   $sth_hosts->execute();
   $sth_visitors->execute();
@@ -110,79 +111,29 @@ get '/see_stats' => sub {
   while ( my $row = $sth_visitors->fetchrow_hashref ) {
     push @$visitors, $row;
   }
-my $game_result_host = Fotbal::Utils::MakeStats->new(data => $hosts,
-team_type => 'hosts' );
-my $game_result_visitors = Fotbal::Utils::MakeStats->new(data => $visitors,
-team_type => 'visitors' );
+  my $teams = { hosts => $hosts, visitors => $visitors };
+  my $game_result = Fotbal::Utils::MakeStats->new( data => $teams );
+  my $results = $game_result->get_data()->make_stats()->make_array_of_hashes();
 
-$hosts = $game_result_host->get_victory();
-$visitors = $game_result_visitors->get_victory();
-my $results = [];
-@$results = (@$hosts, @$visitors);
-  
-  my $final_results = {};
+  my @ready_to_print = @$results;
 
-  foreach my $result (@$results) {
-    my $team_name = $result->{name};
-    my $goals_marked = $result->{goals_marked};
-    my $goals_got = $result->{goals_got};
-    my $victories = $result->{victory};
-    my $defeats = $result->{defeats};
+  # sort by victories and gols marked
+  @ready_to_print = sort {
+         $b->{total_victory} <=> $a->{total_victory}
+      || $b->{total_marked} <=> $a->{total_marked}
+  } @ready_to_print;
 
-   push @{$final_results->{$result->{name}}->{marked}}, $goals_marked;
-    #if $goals_marked;
-   push @{$final_results->{$result->{name}}->{recived}}, $goals_got;
-    #if $goals_got;
-   push @{$final_results->{$result->{name}}->{victory}}, $victories;
-    #if $victories;
-   push @{$final_results->{$result->{name}}->{defeats}}, $defeats;
-    #if $defeats;
-  
-    my $sum_marked_goals =
-      reduce { $a + $b } @{$final_results->{$result->{name}}->{marked}};
-    my $sum_recived_goals =
-      reduce { $a + $b } @{$final_results->{$result->{name}}->{recived}};
-    my $no_of_vicories = reduce { $a + $b } @{$final_results->{$result->{name}}->{victory}};
-    my $no_of_defetats = reduce { $a + $b } @{$final_results->{$result->{name}}->{defeats}};
-    $final_results->{$result->{name}}->{name} = $result->{name};
-    $final_results->{$result->{name}}->{total_marked}  = $sum_marked_goals;
-    $final_results->{$result->{name}}->{total_recived} = $sum_recived_goals;
-    $final_results->{$result->{name}}->{total_victory} = $no_of_vicories;
-    $final_results->{$result->{name}}->{total_defeats} = $no_of_defetats;
+  my @extreme =
+    sort { $b->{total_marked} <=> $a->{total_marked} } @ready_to_print;
+  my $bigets_marker = $extreme[0];
+  @extreme = sort { $b->{recived} <=> $a->{recived} } @ready_to_print;
 
-   }
-  my @ready_to_print;
-  #debug($final_results);
-  foreach my $key (keys %$final_results) {
-    my $row = {};
-  
-      my $name = $final_results->{$key}->{name};
-      my $total_marked = $final_results->{$key}->{total_marked};
-      my $total_recived = $final_results->{$key}->{total_recived};
-      my $total_victory = $final_results->{$key}->{total_victory};
-      my $total_defeats = $final_results->{$key}->{total_defeats};
-      
-      $row->{name} = $name;
-      $row->{total_marked} = $total_marked || 0;
-      $row->{recived} = $total_recived || 0;
-      $row->{total_victory} = $total_victory || 0;
-      $row->{total_defeats} = $total_defeats || 0; 
-    
-   push @ready_to_print, $row;
-  }
-   # sort by victories and gols marked
-   @ready_to_print = sort {$b->{total_victory} <=> $a->{total_victory} ||
-    $b->{total_marked} <=> $a->{total_marked} } @ready_to_print;
-
-    my @extreme =  sort { $b->{total_marked} <=> $a->{total_marked} } @ready_to_print;
-    my $bigets_marker = $extreme[0];
-    @extreme =  sort { $b->{recived} <=> $a->{recived} } @ready_to_print;
-    debug(@extreme);
-    my $bigets_reciver = $extreme[0];
-    @extreme = ($bigets_marker, $bigets_reciver);
-   template 'show_stats', {
-    'team' => \@ready_to_print,
+  my $bigets_reciver = $extreme[0];
+  @extreme = ( $bigets_marker, $bigets_reciver );
+  template 'show_stats',
+    {
+    'team'    => \@ready_to_print,
     'extream' => \@extreme,
-   };
+    };
 };
 true;
